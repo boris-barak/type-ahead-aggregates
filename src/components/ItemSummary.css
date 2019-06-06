@@ -1,0 +1,15 @@
+.item-summary {
+    display: flex;
+    padding-top: 30px;
+}
+
+.item-summary > div {
+    flex: 1;
+}
+
+.item-summary > div > strong {
+    margin-left: 10px;
+    padding: 1px;
+    color: #ff0000;
+    border: #808080 solid thin;
+}
