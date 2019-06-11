@@ -1,16 +1,11 @@
 import React from 'react';
 import './ItemSummary.css';
+import ItemMetric from "./ItemMetric";
 
 const ItemSummary = ({clicks, impressions}) => (
     <div className="item-summary">
-        <div>
-            <span>Clicks:</span>
-            <strong>{clicks}</strong>
-        </div>
-        <div>
-            <span>Impressions:</span>
-            <strong>{impressions}</strong>
-        </div>
+        <ItemMetric name="Clicks" count={clicks} />
+        <ItemMetric name="Impressions" count={impressions} />
     </div>
 );
 
