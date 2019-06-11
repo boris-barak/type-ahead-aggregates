@@ -12,9 +12,6 @@ export default class DataProvider {
         let self = this;
 
         axios.get(this._ulr).then(data => {
-            let dataRows = data.data.split('\n');
-            console.log('csv lines', dataRows);
-
             let dataTable = getDataTableFromCSV(data.data);
             const dataTableTransformer = new DataTableTransformer(dataTable);
             let channels = dataTableTransformer.getGroupedAndSumarisedData('channel');

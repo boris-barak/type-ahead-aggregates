@@ -22,7 +22,6 @@ class App extends React.Component {
     }
 
     onTypeAheadChange(selectedItem) {
-        console.log(selectedItem);
 
         this.setState({
             selectedIndex: selectedItem.value
@@ -36,8 +35,6 @@ class App extends React.Component {
             self.setState({
                 isLoading: false
             });
-
-            console.log(dataProvider.getData());
         });
     }
 
