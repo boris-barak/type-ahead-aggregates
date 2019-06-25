@@ -1,6 +1,6 @@
 import axios from "axios";
 import getDataTableFromCSV from "../factories/getDataTableFromCSV";
-import DataTableTransformer from "./DataTableTransformer";
+import getGroupedAndSumarisedData from "./getGroupedAndSumarisedData";
 
 export default class DataProvider {
     constructor(url) {
@@ -9,19 +9,9 @@ export default class DataProvider {
     }
 
     loadDataFromApi(finishCallback) {
-        let self = this;
-
         axios.get(this._ulr).then(data => {
-            let dataTable = getDataTableFromCSV(data.data);
-            const dataTableTransformer = new DataTableTransformer(dataTable);
-            let channels = dataTableTransformer.getGroupedAndSumarisedData('channel');
-            let campaigns = dataTableTransformer.getGroupedAndSumarisedData('campaign');
-
-            self._data = [...channels, ...campaigns];
-
-            self._data.forEach((value, index) => {
-                value['value'] = index;
-            });
+            const dataTable = getDataTableFromCSV(data.data);
+            this._data = getGroupedAndSumarisedData(dataTable);
 
             finishCallback();
         });

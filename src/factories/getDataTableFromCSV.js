@@ -1,19 +1,23 @@
-import DataRow from "../entities/DataRow";
+const _ = require('lodash');
 
 const getDataTableFromCSV = (dataFromCSV) => {
-    let dataArrayFromCSV = dataFromCSV.split('\n');
+    const wholeArrayFromCSV = dataFromCSV.split('\n');
+    const headerArrayFromCSV = wholeArrayFromCSV[0].split(',');
 
-    dataArrayFromCSV.shift(); // removes the first line
+    const dataArrayFromCSV = wholeArrayFromCSV.slice(1); // without the first line/header
 
-    let dataArray = [];
-    dataArrayFromCSV.forEach((csvLine) => {
-        let itemData = csvLine.split(',');
-        let dataRow = new DataRow(itemData);
+    return _.map(dataArrayFromCSV, (csvLine) => {
+        const itemData = csvLine.split(',');
 
-        dataArray.push(dataRow);
+        return _.reduce(
+            itemData,
+            (accumulator, value, index) => {
+                const key = headerArrayFromCSV[index];
+                return {...accumulator, [key]: value};
+            },
+            {}
+        );
     });
-
-    return dataArray;
 };
 
 export default getDataTableFromCSV;

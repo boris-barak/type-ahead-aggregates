@@ -1,62 +1,32 @@
-import React from 'react';
+import React, {useState, useCallback} from 'react';
 import './App.css';
 import TypeAhead from "./TypeAhead";
-import Loading from "./Loading";
+import ItemSummary from "./ItemSummary";
+import LoadingContainer from "./LoadingContainer";
 import DataProvider from "../helpers/DataProvider";
 import {API_URL} from "../config";
-import ItemSummary from "./ItemSummary";
 
 const dataProvider = new DataProvider(API_URL);
 
-class App extends React.Component {
+const App = () => {
+    const [selectedIndex, setSelectedIndex] = useState(null);
 
-    constructor(props) {
-        super(props);
+    const onTypeAheadChange = useCallback((selectedItem) => {
+        setSelectedIndex(selectedItem.value);
+    }, []);
 
-        this.state = {
-            isLoading: true,
-            selectedIndex: null,
-        };
+    const selectedDataRow = dataProvider.getSelectedRow(selectedIndex);
 
-        this.onTypeAheadChange = this.onTypeAheadChange.bind(this);
-    }
-
-    onTypeAheadChange(selectedItem) {
-
-        this.setState({
-            selectedIndex: selectedItem.value
-        });
-    }
-
-    componentDidMount() {
-        let self = this;
-
-        dataProvider.loadDataFromApi(() => {
-            self.setState({
-                isLoading: false
-            });
-        });
-    }
-
-    render() {
-        if (this.state.isLoading) {
-            return <Loading />;
-        }
-
-        let dataRow = dataProvider.getSelectedRow(this.state.selectedIndex);
-
-        let itemSummaryElement = (dataRow !== null)
-            ? <ItemSummary clicks={dataRow.clicks} impressions={dataRow.impressions} />
-            : null;
-
-        return (
-            <div className="App">
-                <TypeAhead groupedOptions={dataProvider.getData()} onChange={this.onTypeAheadChange} />
-
-                {itemSummaryElement}
-            </div>
-        );
-    }
-}
+    return (
+        <LoadingContainer dataProvider={dataProvider}>
+            {() => ( // used the callback here because the children has to be rendered after the loading is finished
+                <div className="App">
+                    <TypeAhead groupedOptions={dataProvider.getData()} onChange={onTypeAheadChange} />
+                    <ItemSummary dataRow={selectedDataRow} />
+                </div>
+            )}
+        </LoadingContainer>
+    );
+};
 
 export default App;
